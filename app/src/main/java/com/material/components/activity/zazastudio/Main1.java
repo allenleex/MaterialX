@@ -1,16 +1,17 @@
-package com.material.components.activity.button;
+package com.material.components.activity.zazastudio;
 
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.material.components.R;
 import com.material.components.adapter.AdapterListSectioned;
 import com.material.components.data.DataGenerator;
@@ -20,49 +21,43 @@ import com.material.components.utils.ViewAnimation;
 
 import java.util.List;
 
-public class FabMoreText extends AppCompatActivity {
+public class Main1 extends AppCompatActivity {
 
     private View parent_view;
-    private View back_drop;
     private boolean rotate = false;
-    private View lyt_mic;
-    private View lyt_call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_button_fab_more_text);
+        setContentView(R.layout.activity_zazastudio_main);
 
-        parent_view = findViewById(android.R.id.content);
-        back_drop = findViewById(R.id.back_drop);
+        // parent layout must coordinator layout
+        parent_view = findViewById(R.id.coordinator_lyt);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Fab More Text");
+        getSupportActionBar().setTitle(R.string.app_name_cn);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this);
 
         final FloatingActionButton fab_mic = (FloatingActionButton) findViewById(R.id.fab_mic);
         final FloatingActionButton fab_call = (FloatingActionButton) findViewById(R.id.fab_call);
-        final FloatingActionButton fab_add = (FloatingActionButton) findViewById(R.id.fab_capture);
-        lyt_mic = findViewById(R.id.lyt_mic);
-        lyt_call = findViewById(R.id.lyt_call);
-        ViewAnimation.initShowOut(lyt_mic);
-        ViewAnimation.initShowOut(lyt_call);
-        back_drop.setVisibility(View.GONE);
+        ViewAnimation.initShowOut(fab_mic);
+        ViewAnimation.initShowOut(fab_call);
 
-        fab_add.setOnClickListener(new View.OnClickListener() {
+        ((FloatingActionButton) findViewById(R.id.fab_capture)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleFabMode(v);
-            }
-        });
-
-        back_drop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFabMode(fab_add);
+                Toast.makeText(getApplicationContext(), "Button clicked", Toast.LENGTH_SHORT).show();
+//                rotate = ViewAnimation.rotateFab(v, !rotate);
+//                if (rotate) {
+//                    ViewAnimation.showIn(fab_mic);
+//                    ViewAnimation.showIn(fab_call);
+//                } else {
+//                    ViewAnimation.showOut(fab_mic);
+//                    ViewAnimation.showOut(fab_call);
+//                }
             }
         });
 
@@ -80,20 +75,7 @@ public class FabMoreText extends AppCompatActivity {
             }
         });
 
-        initComponent();
-    }
-
-    private void toggleFabMode(View v) {
-        rotate = ViewAnimation.rotateFab(v, !rotate);
-        if (rotate) {
-            ViewAnimation.showIn(lyt_mic);
-            ViewAnimation.showIn(lyt_call);
-            back_drop.setVisibility(View.VISIBLE);
-        } else {
-            ViewAnimation.showOut(lyt_mic);
-            ViewAnimation.showOut(lyt_call);
-            back_drop.setVisibility(View.GONE);
-        }
+        // initComponent();
     }
 
     private void initComponent() {
@@ -122,7 +104,7 @@ public class FabMoreText extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new AdapterListSectioned.OnItemClickListener() {
             @Override
             public void onItemClick(View view, People obj, int position) {
-                Toast.makeText(getApplicationContext(), "Item " + obj.name + " clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Item " + obj.name + " clicked", Toast.LENGTH_SHORT).show();
             }
         });
 

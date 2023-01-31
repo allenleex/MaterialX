@@ -37,13 +37,13 @@ public class BottomNavigationBasic extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_recent:
+                    case R.id.navigation_help:
                         mTextMessage.setText(item.getTitle());
                         return true;
-                    case R.id.navigation_favorites:
+                    case R.id.navigation_main:
                         mTextMessage.setText(item.getTitle());
                         return true;
-                    case R.id.navigation_nearby:
+                    case R.id.navigation_settings:
                         mTextMessage.setText(item.getTitle());
                         return true;
                 }

@@ -71,7 +71,7 @@ public class SnackbarAndFab extends AppCompatActivity {
             }
         });
 
-        ((FloatingActionButton) findViewById(R.id.fab_add)).setOnClickListener(new View.OnClickListener() {
+        ((FloatingActionButton) findViewById(R.id.fab_capture)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(parent_view, "FAB Add clicked", Snackbar.LENGTH_LONG).show();

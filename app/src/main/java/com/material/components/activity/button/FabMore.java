@@ -46,7 +46,7 @@ public class FabMore extends AppCompatActivity {
         ViewAnimation.initShowOut(fab_mic);
         ViewAnimation.initShowOut(fab_call);
 
-        ((FloatingActionButton) findViewById(R.id.fab_add)).setOnClickListener(new View.OnClickListener() {
+        ((FloatingActionButton) findViewById(R.id.fab_capture)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rotate = ViewAnimation.rotateFab(v, !rotate);

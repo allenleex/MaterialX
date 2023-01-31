@@ -37,6 +37,9 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
+        <activity
+            android:name=".activity.zazastudio.Help"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.zazastudio.Main"
@@ -47,7 +50,9 @@
             </intent-filter>
         </activity>
 
-
+        <activity
+            android:name=".activity.zazastudio.Settings"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.ActivityWebView"

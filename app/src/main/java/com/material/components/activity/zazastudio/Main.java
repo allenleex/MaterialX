@@ -1,31 +1,28 @@
 package com.material.components.activity.zazastudio;
 
+import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.core.widget.NestedScrollView;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.material.components.R;
-import com.material.components.adapter.AdapterListSectioned;
-import com.material.components.adapter.AdapterPeopleLeft;
-import com.material.components.data.DataGenerator;
-import com.material.components.fragment.FragmentBottomSheetDialogFull;
-import com.material.components.model.People;
 import com.material.components.utils.Tools;
 import com.material.components.utils.ViewAnimation;
 
-import java.util.List;
-
 public class Main extends AppCompatActivity {
 
-    private View parent_view;
+    private BottomNavigationView navigation;
+    private View search_bar;
+    private ActionBar actionBar;
     private boolean rotate = false;
 
     @Override
@@ -33,83 +30,86 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zazastudio_main);
 
-        // parent layout must coordinator layout
-        parent_view = findViewById(R.id.coordinator_lyt);
+        initToolbar();
+        initComponent();
+    }
 
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.app_name_cn);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Tools.setSystemBarColor(this);
-
-        final FloatingActionButton fab_mic = (FloatingActionButton) findViewById(R.id.fab_mic);
-        final FloatingActionButton fab_call = (FloatingActionButton) findViewById(R.id.fab_call);
-        ViewAnimation.initShowOut(fab_mic);
-        ViewAnimation.initShowOut(fab_call);
-
-        ((FloatingActionButton) findViewById(R.id.fab_add)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Button clicked", Toast.LENGTH_SHORT).show();
-//                rotate = ViewAnimation.rotateFab(v, !rotate);
-//                if (rotate) {
-//                    ViewAnimation.showIn(fab_mic);
-//                    ViewAnimation.showIn(fab_call);
-//                } else {
-//                    ViewAnimation.showOut(fab_mic);
-//                    ViewAnimation.showOut(fab_call);
-//                }
-            }
-        });
-
-        fab_mic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Voice clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        fab_call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Call clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // initComponent();
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.app_name_cn);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        Tools.setSystemBarColor(this, R.color.grey_1000);
     }
 
     private void initComponent() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-
-        List<People> items = DataGenerator.getPeopleData(this);
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
-
-        int sect_count = 0;
-        int sect_idx = 0;
-        List<String> months = DataGenerator.getStringsMonth(this);
-        for (int i = 0; i < items.size() / 6; i++) {
-            items.add(sect_count, new People(months.get(sect_idx), true));
-            sect_count = sect_count + 5;
-            sect_idx++;
-        }
-
-        //set data and list adapter
-        AdapterListSectioned mAdapter = new AdapterListSectioned(this, items);
-        recyclerView.setAdapter(mAdapter);
-
-        // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListSectioned.OnItemClickListener() {
+        NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
+        nested_content.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onItemClick(View view, People obj, int position) {
-                Toast.makeText(getApplicationContext(), "Item " + obj.name + " clicked", Snackbar.LENGTH_LONG).show();
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY < oldScrollY) { // up
+//                    animateNavigation(false);
+//                    animateSearchBar(false);
+//                }
+//                if (scrollY > oldScrollY) { // down
+//                    animateNavigation(true);
+//                    animateSearchBar(true);
+//                }
+            }
+        });
+        search_bar = (View) findViewById(R.id.search_bar);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigation_main);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
+                switch (item.getItemId()) {
+                    case R.id.navigation_help:
+                        startActivity(new Intent(getApplicationContext(), Help.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.navigation_main:
+                        return true;
+                    case R.id.navigation_settings:
+                        startActivity(new Intent(getApplicationContext(), Settings.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
             }
         });
 
+        // display image
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_1), R.drawable.image_8);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_2), R.drawable.image_9);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_3), R.drawable.image_15);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_4), R.drawable.image_14);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_5), R.drawable.image_12);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_6), R.drawable.image_2);
+//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_7), R.drawable.image_5);
+
+    }
+
+
+    boolean isNavigationHide = false;
+
+    private void animateNavigation(final boolean hide) {
+        if (isNavigationHide && hide || !isNavigationHide && !hide) return;
+        isNavigationHide = hide;
+        int moveY = hide ? (2 * navigation.getHeight()) : 0;
+        navigation.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
+    }
+
+    boolean isSearchBarHide = false;
+
+    private void animateSearchBar(final boolean hide) {
+        if (isSearchBarHide && hide || !isSearchBarHide && !hide) return;
+        isSearchBarHide = hide;
+        int moveY = hide ? -(2 * search_bar.getHeight()) : 0;
+        search_bar.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
     }
 
     @Override
@@ -127,4 +127,5 @@ public class Main extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -44,7 +44,7 @@ public class NoItemBgCactus extends AppCompatActivity {
         params.height = Tools.getScreenWidth();
         bg_image.setLayoutParams(params);
 
-        ((FloatingActionButton) findViewById(R.id.fab_add)).setOnClickListener(new View.OnClickListener() {
+        ((FloatingActionButton) findViewById(R.id.fab_capture)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Add Account clicked", Toast.LENGTH_SHORT).show();

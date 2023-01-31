@@ -49,7 +49,7 @@ public class TimelineSimple extends AppCompatActivity {
 
     boolean isFabHide = false;
     private void animateFab(final boolean hide) {
-        FloatingActionButton fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
+        FloatingActionButton fab_add = (FloatingActionButton) findViewById(R.id.fab_capture);
         if (isFabHide && hide || !isFabHide && !hide) return;
         isFabHide = hide;
         int moveY = hide ? (2 * fab_add.getHeight()) : 0;
