@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">CaptureSpite</string>
-    <string name="app_name_cn">动捕精灵 - 采集终端</string>
+    <string name="app_name">动捕精灵</string>
+    <string name="app_name_cn">动捕精灵</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,5 +19,11 @@
     <string name="app_version">0.1.0</string>
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">加载中... </string>
+
+    <string name="load_picture" translatable="false">加载图片</string>
+    <string name="load_video" translatable="false">加载视频</string>
+    <string name="start_camera" translatable="false">开启摄像头</string>
+    <string name="start_tcp" translatable="false">TCP推送</string>
+    <string name="instruction" translatable="false">点击上方按钮开始测试</string>
 
 </resources>

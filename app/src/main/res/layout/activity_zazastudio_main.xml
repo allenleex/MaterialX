@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:scrollingCache="true">
+            android:scrollingCache="true"
+            tools:ignore="SpeakableTextPresentCheck">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,14 +69,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/preview_display_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center|center_horizontal|end"
             android:layout_marginBottom="150px"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_misc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_smlarge"
+                android:layout_marginTop="@dimen/spacing_middle"
+                android:layout_marginRight="@dimen/spacing_smlarge"
+                android:layout_marginBottom="@dimen/spacing_smlarge"
+                android:layout_weight="1"
+                android:alpha="0.8"
+                android:clickable="true"
+                android:contentDescription="@string/AGREE"
+                android:tint="@android:color/white"
+                android:visibility="invisible"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/ic_refresh"
+                tools:ignore="ImageContrastCheck" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_capture"
@@ -88,15 +112,31 @@
                 android:alpha="0.8"
                 android:clickable="true"
                 android:contentDescription="@string/AGREE"
-                android:tint="@android:color/white"
-                app:backgroundTint="@color/red_800"
+                android:tint="@color/red_900"
+                app:backgroundTint="@color/blue_grey_100"
                 app:fabSize="normal"
-                app:rippleColor="@android:color/white"
+                app:rippleColor="@color/blue_grey_500"
                 app:srcCompat="@drawable/ic_adjust"
                 tools:ignore="ImageContrastCheck" />
 
-        </LinearLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_smlarge"
+                android:layout_marginTop="@dimen/spacing_middle"
+                android:layout_marginRight="@dimen/spacing_smlarge"
+                android:layout_marginBottom="@dimen/spacing_smlarge"
+                android:alpha="0.8"
+                android:clickable="true"
+                android:contentDescription="@string/AGREE"
+                android:tint="@android:color/white"
+                app:backgroundTint="@color/transparent"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/ic_refresh"
+                tools:ignore="ImageContrastCheck" />
 
+        </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

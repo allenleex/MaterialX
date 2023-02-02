@@ -1,35 +1,33 @@
+// Copyright 2021 The MediaPipe Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.material.components.activity.zazastudio;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.core.widget.NestedScrollView;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.provider.MediaStore;
-import android.transition.Visibility;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.exifinterface.media.ExifInterface;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.material.components.R;
-import com.material.components.utils.Tools;
-import com.material.components.utils.ViewAnimation;
-
+// ContentResolver dependency
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
 import com.google.mediapipe.solutioncore.CameraInput;
 import com.google.mediapipe.solutioncore.SolutionGlSurfaceView;
@@ -37,6 +35,8 @@ import com.google.mediapipe.solutioncore.VideoInput;
 import com.google.mediapipe.solutions.facemesh.FaceMesh;
 import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
 import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
+import com.material.components.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -46,17 +46,14 @@ import cn.zazastudio.tcp.FaceMeshResultImageView;
 import cn.zazastudio.tcp.TCPClient;
 import cn.zazastudio.tcp.TCPHandler;
 
-public class Main extends AppCompatActivity {
-
-    private BottomNavigationView navigation;
-    private View search_bar;
-    private ActionBar actionBar;
-    private boolean rotate = false;
-
+/** Main activity of MediaPipe Face Mesh app. */
+public class MainOld extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
     private FaceMesh facemesh;
     // Run the pipeline and the model inference on GPU or CPU.
     private static final boolean RUN_ON_GPU = true;
+
     private enum InputSource {
         UNKNOWN,
         IMAGE,
@@ -72,125 +69,29 @@ public class Main extends AppCompatActivity {
     private ActivityResultLauncher<Intent> videoGetter;
     // Live camera demo UI and camera components.
     private CameraInput cameraInput;
+
     private SolutionGlSurfaceView<FaceMeshResult> glSurfaceView;
+
     private static final int[] USEFUL_LANDMARKS = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
     private static final int MAX_LANDMARK_ID = 30; //68
+
     private TCPClient client;
     private TCPHandler handler;
     private String ip = "192.168.1.12";
     private String port = "60000";
     private boolean tcp_enabled = false;
-    private boolean camera_opened = false;
-    private boolean camera_front = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zazastudio_main);
-
-        initToolbar();
-        initComponent();
-
+        setContentView(R.layout.activity_zazastudio_main_old);
+        // TODO: Add a toggle to switch between the original face mesh and attention mesh.
         setupStaticImageDemoUiComponents();
         setupVideoDemoUiComponents();
         setupLiveDemoUiComponents();
         setupTcpDemoUiComponents();
 
 //        tcpInit();
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.app_name_cn);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        Tools.setSystemBarColor(this, R.color.grey_1000);
-    }
-
-    private void initComponent() {
-        NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
-        nested_content.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY < oldScrollY) { // up
-//                    animateNavigation(false);
-//                    animateSearchBar(false);
-//                }
-//                if (scrollY > oldScrollY) { // down
-//                    animateNavigation(true);
-//                    animateSearchBar(true);
-//                }
-            }
-        });
-        search_bar = (View) findViewById(R.id.search_bar);
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigation_main);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
-                switch (item.getItemId()) {
-                    case R.id.navigation_help:
-                        startActivity(new Intent(getApplicationContext(), Help.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.navigation_main:
-                        return true;
-                    case R.id.navigation_settings:
-                        startActivity(new Intent(getApplicationContext(), Settings.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
-
-        // display image
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_1), R.drawable.image_8);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_2), R.drawable.image_9);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_3), R.drawable.image_15);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_4), R.drawable.image_14);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_5), R.drawable.image_12);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_6), R.drawable.image_2);
-//        Tools.displayImageOriginal(this, (ImageView) findViewById(R.id.image_7), R.drawable.image_5);
-
-    }
-
-
-    boolean isNavigationHide = false;
-
-    private void animateNavigation(final boolean hide) {
-        if (isNavigationHide && hide || !isNavigationHide && !hide) return;
-        isNavigationHide = hide;
-        int moveY = hide ? (2 * navigation.getHeight()) : 0;
-        navigation.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
-    }
-
-    boolean isSearchBarHide = false;
-
-    private void animateSearchBar(final boolean hide) {
-        if (isSearchBarHide && hide || !isSearchBarHide && !hide) return;
-        isSearchBarHide = hide;
-        int moveY = hide ? -(2 * search_bar.getHeight()) : 0;
-        search_bar.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -257,54 +158,125 @@ public class Main extends AppCompatActivity {
 
     /** Sets up the UI components for the static image demo. */
     private void setupStaticImageDemoUiComponents() {
+        // The Intent to access gallery and read images as bitmap.
+        imageGetter =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            Intent resultIntent = result.getData();
+                            if (resultIntent != null) {
+                                if (result.getResultCode() == RESULT_OK) {
+                                    Bitmap bitmap = null;
+                                    try {
+                                        bitmap =
+                                                downscaleBitmap(
+                                                        MediaStore.Images.Media.getBitmap(
+                                                                this.getContentResolver(), resultIntent.getData()));
+                                    } catch (IOException e) {
+                                        Log.e(TAG, "Bitmap reading error:" + e);
+                                    }
+                                    try {
+                                        InputStream imageData =
+                                                this.getContentResolver().openInputStream(resultIntent.getData());
+                                        bitmap = rotateBitmap(bitmap, imageData);
+                                    } catch (IOException e) {
+                                        Log.e(TAG, "Bitmap rotation error:" + e);
+                                    }
+                                    if (bitmap != null) {
+                                        facemesh.send(bitmap);
+                                    }
+                                }
+                            }
+                        });
+        Button loadImageButton = findViewById(R.id.button_load_picture);
+        loadImageButton.setOnClickListener(
+                v -> {
+                    if (inputSource != InputSource.IMAGE) {
+                        stopCurrentPipeline();
+                        setupStaticImageModePipeline();
+                    }
+                    // Reads images from gallery.
+                    Intent pickImageIntent = new Intent(Intent.ACTION_PICK);
+                    pickImageIntent.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*");
+                    imageGetter.launch(pickImageIntent);
+                });
         imageView = new FaceMeshResultImageView(this);
     }
 
     /** Sets up core workflow for static image mode. */
     private void setupStaticImageModePipeline() {
+        this.inputSource = InputSource.IMAGE;
+        // Initializes a new MediaPipe Face Mesh solution instance in the static image mode.
+        facemesh =
+                new FaceMesh(
+                        this,
+                        FaceMeshOptions.builder()
+                                .setStaticImageMode(true)
+                                .setRefineLandmarks(true)
+                                .setRunOnGpu(RUN_ON_GPU)
+                                .build());
+
+        // Connects MediaPipe Face Mesh solution to the user-defined FaceMeshResultImageView.
+        facemesh.setResultListener(
+                faceMeshResult -> {
+                    logNoseLandmark(faceMeshResult, /*showPixelValues=*/ true);
+                    imageView.setFaceMeshResult(faceMeshResult);
+                    runOnUiThread(() -> imageView.update());
+                });
+        facemesh.setErrorListener((message, e) -> Log.e(TAG, "MediaPipe Face Mesh error:" + message));
+
+        // Updates the preview layout.
+        FrameLayout frameLayout = findViewById(R.id.preview_display_layout);
+        frameLayout.removeAllViewsInLayout();
+        imageView.setImageDrawable(null);
+        frameLayout.addView(imageView);
+        imageView.setVisibility(View.VISIBLE);
     }
 
     /** Sets up the UI components for the video demo. */
     private void setupVideoDemoUiComponents() {
+        // The Intent to access gallery and read a video file.
+        videoGetter =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            Intent resultIntent = result.getData();
+                            if (resultIntent != null) {
+                                if (result.getResultCode() == RESULT_OK) {
+                                    glSurfaceView.post(
+                                            () ->
+                                                    videoInput.start(
+                                                            this,
+                                                            resultIntent.getData(),
+                                                            facemesh.getGlContext(),
+                                                            glSurfaceView.getWidth(),
+                                                            glSurfaceView.getHeight()));
+                                }
+                            }
+                        });
+        Button loadVideoButton = findViewById(R.id.button_load_video);
+        loadVideoButton.setOnClickListener(
+                v -> {
+                    stopCurrentPipeline();
+                    setupStreamingModePipeline(InputSource.VIDEO);
+                    // Reads video from gallery.
+                    Intent pickVideoIntent = new Intent(Intent.ACTION_PICK);
+                    pickVideoIntent.setDataAndType(MediaStore.Video.Media.INTERNAL_CONTENT_URI, "video/*");
+                    videoGetter.launch(pickVideoIntent);
+                });
     }
 
     /** Sets up the UI components for the live demo with camera input. */
     private void setupLiveDemoUiComponents() {
-        ((FloatingActionButton) findViewById(R.id.fab_capture)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!camera_opened) {
+        Button startCameraButton = findViewById(R.id.button_start_camera);
+        startCameraButton.setOnClickListener(
+                v -> {
+                    if (inputSource == InputSource.CAMERA) {
+                        return;
+                    }
                     stopCurrentPipeline();
                     setupStreamingModePipeline(InputSource.CAMERA);
-                } else {
-                    stopCurrentPipeline();
-                }
-                camera_opened = !camera_opened;
-            }
-        });
-        ((FloatingActionButton) findViewById(R.id.fab_switch)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (inputSource == InputSource.CAMERA && camera_opened) {
-                    if(camera_front) {
-                        cameraInput.start(
-                                Main.this,
-                                facemesh.getGlContext(),
-                                CameraInput.CameraFacing.BACK,
-                                glSurfaceView.getWidth(),
-                                glSurfaceView.getHeight());
-                    } else {
-                        cameraInput.start(
-                                Main.this,
-                                facemesh.getGlContext(),
-                                CameraInput.CameraFacing.FRONT,
-                                glSurfaceView.getWidth(),
-                                glSurfaceView.getHeight());
-                    }
-                    camera_front = !camera_front;
-                }
-            }
-        });
+                });
     }
 
     /** Sets up core workflow for streaming mode. */
@@ -377,7 +349,7 @@ public class Main extends AppCompatActivity {
         if (glSurfaceView != null) {
             glSurfaceView.setVisibility(View.GONE);
         }
-        if (facemesh != null && camera_opened) {
+        if (facemesh != null) {
             facemesh.close();
         }
     }
@@ -410,15 +382,15 @@ public class Main extends AppCompatActivity {
     }
 
     private void setupTcpDemoUiComponents() {
-//        Button startTcpButton = findViewById(R.id.button_start_tcp);
-//        startTcpButton.setOnClickListener(
-//                v -> {
-//                    tcp_enabled = !tcp_enabled;
-//                });
+        Button startTcpButton = findViewById(R.id.button_start_tcp);
+        startTcpButton.setOnClickListener(
+                v -> {
+                    tcp_enabled = !tcp_enabled;
+                });
     }
 
     private void tcpInit() {
-        handler = new TCPHandler(Main.this);
+        handler = new TCPHandler(MainOld.this);
         client = new TCPClient(handler);
 
         if (TCPHandler.CONNECT_STATUS) {
@@ -439,5 +411,4 @@ public class Main extends AppCompatActivity {
             }
         }
     }
-
 }

@@ -18,7 +18,7 @@ public class TCPClient {
 
     private TCPHandler handler;
 
-    TCPClient(TCPHandler handler) {
+    public TCPClient(TCPHandler handler) {
         this.handler = handler;
     }
 

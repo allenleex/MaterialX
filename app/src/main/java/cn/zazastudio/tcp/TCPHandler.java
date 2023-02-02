@@ -21,11 +21,11 @@ public class TCPHandler extends Handler {
 
     private Context context;
 
-    TCPHandler(Context context) {
+    public TCPHandler(Context context) {
         this.context = context;
     }
 
-    TCPHandler(TextView tv_show, Button bt_connect, Button bt_send, Context context) {
+    public TCPHandler(TextView tv_show, Button bt_connect, Button bt_send, Context context) {
         this.context = context;
     }
 

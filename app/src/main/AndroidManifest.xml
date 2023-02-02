@@ -8,6 +8,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- For using the camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <!-- For loading images from gallery -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".data.ThisApplication"
@@ -52,6 +57,11 @@
 
         <activity
             android:name=".activity.zazastudio.Main"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".activity.zazastudio.MainOld"
             android:screenOrientation="portrait">
         </activity>
 
