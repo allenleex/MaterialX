@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:descendantFocusability="blocksDescendants"
+                android:paddingTop="?attr/actionBarSize"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -36,6 +36,9 @@
                         android:orientation="vertical"
                         android:paddingTop="@dimen/spacing_middle">
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1px" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -43,18 +46,17 @@
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:gravity="center_vertical"
-                            android:minHeight="60dp"
+                            android:minHeight="@dimen/spacing_xxlarge"
                             android:orientation="horizontal"
                             android:paddingLeft="@dimen/spacing_large"
                             android:paddingRight="@dimen/spacing_large">
-
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Select Language"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:text="TCP推送"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@color/grey_90"
                                 android:textStyle="bold" />
 
@@ -62,12 +64,11 @@
                                 android:layout_width="@dimen/spacing_middle"
                                 android:layout_height="wrap_content" />
 
-                            <TextView
+                            <Switch
+                                android:id="@+id/open_tcp"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="English, US"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                android:textColor="@color/colorPrimary" />
+                                android:layout_height="match_parent"
+                                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                             <View
                                 android:layout_width="@dimen/spacing_middle"
@@ -75,12 +76,6 @@
 
                         </LinearLayout>
 
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -89,100 +84,29 @@
                             android:orientation="vertical"
                             android:padding="@dimen/spacing_large">
 
-                            <LinearLayout
+                            <EditText
+                                android:id="@+id/tcp_ip"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_height="40dp"
+                                android:background="@null"
+                                android:hint="IP地址"
+                                android:inputType="text"
+                                android:maxLength="20"
+                                android:textColor="@color/grey_90" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Real Time Mode"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                    android:textColor="@color/grey_90"
-                                    android:textStyle="bold" />
-
-                                <View
-                                    android:layout_width="@dimen/spacing_middle"
-                                    android:layout_height="wrap_content" />
-
-                                <androidx.appcompat.widget.SwitchCompat
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    app:thumbTint="@color/switch_color_primary" />
-
-                                <View
-                                    android:layout_width="@dimen/spacing_middle"
-                                    android:layout_height="wrap_content" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/middle_lorem_ipsum"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                android:textColor="@color/grey_40" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:minHeight="?attr/actionBarSize"
-                            android:orientation="vertical"
-                            android:padding="@dimen/spacing_large">
-
-                            <LinearLayout
+                            <View
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_height="15dp" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Game Sound"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                    android:textColor="@color/grey_90"
-                                    android:textStyle="bold" />
-
-                                <View
-                                    android:layout_width="@dimen/spacing_middle"
-                                    android:layout_height="wrap_content" />
-
-                                <androidx.appcompat.widget.SwitchCompat
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    app:thumbTint="@color/switch_color_primary" />
-
-                                <View
-                                    android:layout_width="@dimen/spacing_middle"
-                                    android:layout_height="wrap_content" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Sound during gameplay"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                android:textColor="@color/grey_40" />
+                            <EditText
+                                android:id="@+id/tcp_port"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@null"
+                                android:hint="端口号"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:textColor="@color/grey_90" />
 
                         </LinearLayout>
 
@@ -203,18 +127,6 @@
                         android:orientation="vertical"
                         android:paddingTop="@dimen/spacing_middle">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_large"
-                            android:layout_marginLeft="@dimen/spacing_large"
-                            android:layout_marginTop="@dimen/spacing_large"
-                            android:layout_marginBottom="@dimen/spacing_middle"
-                            android:text="Push Notifications"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_90"
-                            android:textStyle="bold" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -230,255 +142,27 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Recommended tournaments"
+                                android:text="数据压缩加密"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
+                                android:textColor="@color/grey_90"
+                                android:textStyle="bold" />
 
                             <View
                                 android:layout_width="@dimen/spacing_middle"
                                 android:layout_height="wrap_content" />
 
-                            <androidx.appcompat.widget.SwitchCompat
+                            <Switch
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"
-                                app:thumbTint="@color/switch_color_primary" />
+                                android:layout_height="match_parent"
+                                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                             <View
                                 android:layout_width="@dimen/spacing_middle"
                                 android:layout_height="wrap_content" />
 
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="New Deals &amp; Rewards"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"
-                                app:thumbTint="@color/switch_color_primary" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Occasional promo"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="false"
-                                app:thumbTint="@color/switch_color_primary" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Event &amp; Match"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="false"
-                                app:thumbTint="@color/switch_color_primary" />
-
-                            <View
-                                android:layout_width="@dimen/spacing_middle"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
 
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spacing_middle" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/spacing_middle">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_large"
-                            android:layout_marginLeft="@dimen/spacing_large"
-                            android:layout_marginTop="@dimen/spacing_large"
-                            android:layout_marginBottom="@dimen/spacing_middle"
-                            android:text="More"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_90"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Ask a Question"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="F A Q"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xxlarge"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/spacing_large"
-                            android:paddingRight="@dimen/spacing_large">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Privacy Policy"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:textColor="@color/grey_40" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:background="@color/grey_10" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spacing_middle" />
 
                 </LinearLayout>
             </LinearLayout>

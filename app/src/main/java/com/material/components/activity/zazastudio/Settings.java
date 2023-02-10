@@ -1,6 +1,8 @@
 package com.material.components.activity.zazastudio;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -8,10 +10,15 @@ import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.material.components.R;
@@ -77,6 +84,55 @@ public class Settings extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        Switch openTCPSwitch = (Switch) findViewById(R.id.open_tcp);
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("option", Context.MODE_PRIVATE);
+        openTCPSwitch.setChecked(sharedPref.getBoolean("openTcp", false));
+
+        openTCPSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            sharedPref.edit().putBoolean("openTcp", b).commit();
+        });
+
+        EditText textIp = (EditText) findViewById(R.id.tcp_ip);
+        EditText textPort = (EditText) findViewById(R.id.tcp_port);
+
+        textIp.setText(sharedPref.getString("tcpIp", ""));
+        textPort.setText(sharedPref.getString("tcpPort", ""));
+
+        textIp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                sharedPref.edit().putString("tcpIp", editable.toString()).commit();
+            }
+        });
+
+        textPort.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                sharedPref.edit().putString("tcpPort", editable.toString()).commit();
             }
         });
 

@@ -1,6 +1,9 @@
 package com.material.components.activity.zazastudio;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -11,24 +14,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.MediaStore;
-import android.transition.Visibility;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.exifinterface.media.ExifInterface;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.material.components.R;
 import com.material.components.utils.Tools;
-import com.material.components.utils.ViewAnimation;
 
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
 import com.google.mediapipe.solutioncore.CameraInput;
@@ -40,6 +37,9 @@ import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.zazastudio.tcp.FaceMeshResultGlRenderer;
 import cn.zazastudio.tcp.FaceMeshResultImageView;
@@ -88,6 +88,11 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zazastudio_main);
 
+        SharedPreferences sharedPref = getSharedPreferences("option", Context.MODE_PRIVATE);
+        tcp_enabled = sharedPref.getBoolean("openTcp", false);
+        ip = sharedPref.getString("tcpIp", "");
+        port = sharedPref.getString("tcpPort", "");
+
         initToolbar();
         initComponent();
 
@@ -96,7 +101,9 @@ public class Main extends AppCompatActivity {
         setupLiveDemoUiComponents();
         setupTcpDemoUiComponents();
 
-//        tcpInit();
+        if (tcp_enabled) {
+            tcpInit();
+        } else if (client != null) client.closeAll();
     }
 
     private void initToolbar() {
@@ -305,6 +312,7 @@ public class Main extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     /** Sets up core workflow for streaming mode. */
@@ -334,9 +342,24 @@ public class Main extends AppCompatActivity {
                 new SolutionGlSurfaceView<>(this, facemesh.getGlContext(), facemesh.getGlMajorVersion());
         glSurfaceView.setSolutionResultRenderer(new FaceMeshResultGlRenderer());
         glSurfaceView.setRenderInputImage(true);
+
+        AtomicInteger count = new AtomicInteger(1);
+        List<ActionCapture> actionCaptureList = new ArrayList<>();
         facemesh.setResultListener(
                 faceMeshResult -> {
-                    logNoseLandmark(faceMeshResult, /*showPixelValues=*/ false);
+                    ActionCapture actionCapture = logNoseLandmark(faceMeshResult, /*showPixelValues=*/ false, count.get() / 30, count.get() % 30);
+                    actionCaptureList.add(actionCapture);
+//                    if (tcp_enabled && count.incrementAndGet() > 60) {
+//                        count.set(1);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMessage(actionCapture.toString()); //开启新线程发送数据
+                                actionCaptureList.clear();
+                            }
+                        }).start();
+//                    }
+
                     glSurfaceView.setRenderData(faceMeshResult);
                     glSurfaceView.requestRender();
                 });
@@ -382,31 +405,24 @@ public class Main extends AppCompatActivity {
         }
     }
 
-    private void logNoseLandmark(FaceMeshResult result, boolean showPixelValues) {
+    @SuppressLint("DefaultLocale")
+    private ActionCapture logNoseLandmark(FaceMeshResult result, boolean showPixelValues, int second, int frame) {
         if (result == null || result.multiFaceLandmarks().isEmpty()) {
-            return;
+            return null;
         }
+
         java.util.List<NormalizedLandmark> landmarks = result.multiFaceLandmarks().get(0).getLandmarkList();
-        String data = "";
+        List<FaceData> data = new ArrayList<>();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         for (int k = 0; k <= MAX_LANDMARK_ID; k++) {
             NormalizedLandmark mark = landmarks.get(k);
-            String s = String.format("{\"id\":%d, \"x\":%f, \"y\":%f, \"z\":%f}", k, mark.getX(), mark.getY(), mark.getZ());
-            if (k == 0) data += s;
-            else data += "," + s;
-        }
-        String json = String.format("{\"face\":%d, \"size\":%d, \"data\":[%s], \"timestamp\":\"%s\"}", 0, MAX_LANDMARK_ID, data, timestamp);
 
-        Log.i(TAG, json); // 打印位点坐标数据到日志
-
-        if (tcp_enabled) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    client.sendMessage(json); //开启新线程发送数据
-                }
-            }).start();
+            data.add(new FaceData(k, mark.getX(), mark.getY(), mark.getZ()));
         }
+        ActionCapture actionCapture = new ActionCapture(second, frame, 0, timestamp, data);
+
+        Log.i(TAG, actionCapture.toString()); // 打印位点坐标数据到日志
+        return actionCapture;
     }
 
     private void setupTcpDemoUiComponents() {
